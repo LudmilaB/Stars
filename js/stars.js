@@ -3,7 +3,7 @@
 	  var canvas = document.getElementById('myCanvas');
 	  var ctx = canvas.getContext('2d');
 
- var Cookie="best-stars";
+      var Cookie="best-stars";
 	  var best=window.localStorage.getItem(Cookie);
 	     if(best === undefined || best === null || best.length === 0)
 			 best=0;
@@ -301,6 +301,7 @@ function mouseDownListener(evt) {
 	            {
 	               best=score;
 	               document.getElementById('best-container').innerHTML= best;
+				   window.localStorage.setItem(Cookie, best );	
 		        }
                 draw();
 				CheckAndChangeDiagonals(targeti,targetj);
@@ -309,7 +310,7 @@ function mouseDownListener(evt) {
 					messageContainer = document.querySelector(".game-message");
 					messageContainer.classList.add("game-over");
 					messageContainer.getElementsByTagName("p")[0].textContent ="Game over!";
-					ShareScore();
+	//				ShareScore();
 				}
 				return;
 			}
@@ -480,7 +481,7 @@ function MovingScore(txt, x, y, moves )
    ctx.fillText(txt,x,y-moves*2);
    setTimeout( function(){MovingScore(txt, x, y, moves)}, 20);
 }	
-function ShareScore()
+/*function ShareScore()
    {
 	var tweet = document.getElementById("share-twitter");
     var text = "https://twitter.com/intent/tweet?text="+"I've scored " + this.score +" of Fill Stars. Can you beat me? http://shapesmania.com/";
@@ -491,13 +492,13 @@ function ShareScore()
 	var google = document.getElementById("share-google");
 	text="https://plus.google.com/share?url=http://shapesmania.com/share/stars/" +this.score+"/"+this.level;
 	google.href=text;
-   } 
+   }  */
    
-   	function RemoveMessage()
-	{
+function RemoveMessage()
+{
 		
 	  messageContainer = document.querySelector(".game-message");
 	  messageContainer.classList.remove("game-over");
       messageContainer.classList.remove("game-continue");  
 		
-	}
+}
