@@ -14,7 +14,7 @@
 	  var mouseY;
 	  var dragHoldX;
 	  var dragHoldY;
-      var timer;
+      var timer=0;
 	  var targetX;
 	  var targetY;
 	  var targeti;
@@ -155,7 +155,7 @@ function touchStartListener(evt){
 }
 function mouseDownListener(evt) {
 	    console.log(evt.type);	    
-		
+		evt.preventDefault();
 		//getting mouse position correctly, being mindful of resizing that may have occured in the browser:
 		var bRect = canvas.getBoundingClientRect();
 		var clientX= evt.type=="mousedown"? evt.clientX:evt.changedTouches[0].clientX;
@@ -179,7 +179,7 @@ function mouseDownListener(evt) {
 
 		window.addEventListener("mousemove", mouseMoveListener, false);
 		window.addEventListener("touchmove", touchMoveListener, false);
-		evt.preventDefault();
+//		evt.preventDefault();
 
 		canvas.removeEventListener("mousedown", mouseDownListener, false);
 		canvas.removeEventListener("touchstart", touchStartListener, false);
@@ -222,7 +222,7 @@ function mouseDownListener(evt) {
 		var dif_x=clientX - dragHoldX;
 		var dif_y=clientY - dragHoldY;
 
-		if(Math.abs(Math.abs(dif_x)-Math.abs(dif_y))<=3)   // we don't know direction
+		if(Math.abs(Math.abs(dif_x)-Math.abs(dif_y))|| timer)   // we don't know direction or finish last move
 					return;  
         
 		window.removeEventListener("mousemove", mouseMoveListener, false);
@@ -283,6 +283,7 @@ function mouseDownListener(evt) {
 		{
 						//stop timer:
 			clearInterval(timer);
+			timer=0;
 			Stars[Circlei][Circlej].ct_x=(Circlej+0.5)*canvas.width/cells;
 			Stars[Circlei][Circlej].ct_y=(Circlei+0.5)*canvas.width/cells;
 			
@@ -309,7 +310,7 @@ function mouseDownListener(evt) {
 				{
 					messageContainer = document.querySelector(".game-message");
 					messageContainer.classList.add("game-over");
-					messageContainer.getElementsByTagName("p")[0].textContent ="Game over!";
+					messageContainer.getElementsByTagName("p")[0].textContent ="Out of moves";
 	//				ShareScore();
 				}
 				return;
