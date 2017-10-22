@@ -7,7 +7,6 @@
 	  var best=window.localStorage.getItem(Cookie);
 	     if(best === undefined || best === null || best.length === 0)
 			 best=0;
-	  console.log(best);
 	  document.getElementById('best-container').innerHTML=best;
 	  
 	  var mouseX;
@@ -153,9 +152,11 @@ function touchStartListener(evt){
 	
 	return mouseDownListener(evt);
 }
-function mouseDownListener(evt) {
-	    console.log(evt.type);	    
+function mouseDownListener(evt) {	    
 		evt.preventDefault();
+		if(timer)
+			return;
+
 		//getting mouse position correctly, being mindful of resizing that may have occured in the browser:
 		var bRect = canvas.getBoundingClientRect();
 		var clientX= evt.type=="mousedown"? evt.clientX:evt.changedTouches[0].clientX;
@@ -222,7 +223,7 @@ function mouseDownListener(evt) {
 		var dif_x=clientX - dragHoldX;
 		var dif_y=clientY - dragHoldY;
 
-		if(Math.abs(Math.abs(dif_x)-Math.abs(dif_y))|| timer)   // we don't know direction or finish last move
+		if(Math.abs(Math.abs(dif_x)-Math.abs(dif_y))<=3)   // we don't know direction or finish last move
 					return;  
         
 		window.removeEventListener("mousemove", mouseMoveListener, false);
