@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 
 <widget xmlns = "http://www.w3.org/ns/widgets" 
-   xmlns:gap = "http://phonegap.com/ns/1.0" id = "com.shapesmania.fillstars" version = "1.03">
+   xmlns:gap = "http://phonegap.com/ns/1.0" id = "com.shapesmania.fillstars" version = "1.04">
    
    <name>Fill Stars</name>
    
@@ -9,7 +9,7 @@
       Fill maximum number of stars
    </description>
    
-   <author href = "http://shapesmania.com/" email = "wheretoplaychess@gmail.com">
+   <author href = "http://shapesmania.com/" email = "ludmiladvmnt@gmail.com">
       Shapes Mania
    </author>
    

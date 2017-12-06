@@ -19,7 +19,13 @@
 	  var targeti;
 	  var targetj;
 	  var easeAmount;	  
-
+      var StarFilledSound = new sound("sounds/menu-button-click-switch-01.mp3");
+	  var TwoDiagonalsFilledSound = new sound("sounds/correct-answer-bell-gliss-04.mp3");
+	  var EndOfGameSound = new sound("sounds/correct-answer-bell-gliss-01.mp3");
+	  var DiagonalFilledSound = new sound("sounds/correct-answer-notification-01.mp3");	  
+      
+	  var PlaySounds=false;
+      
 	  var cells=7;   //cells x cells in game table
 
 	  var Stars=new Array(cells);
@@ -65,7 +71,7 @@ function shape(ct_x, ct_y,type)
 	  
 	  score=0;
 	  level=1;
-	  window.localStorage.setItem(Cookie, best);
+//	  window.localStorage.setItem(Cookie, best);
 	  document.getElementById('best-container').innerHTML=best;
 	  document.getElementById('score-container').innerHTML=0;
 	  draw();
@@ -306,9 +312,12 @@ function mouseDownListener(evt) {
 				   window.localStorage.setItem(Cookie, best );	
 		        }
                 draw();
-				CheckAndChangeDiagonals(targeti,targetj);
+				if(!CheckAndChangeDiagonals(targeti,targetj))   //diagonals were not filled
+					StarFilledSound.play();
+
 				if(EndOfGame()==true)
 				{
+                    EndOfGameSound.play();
 					messageContainer = document.querySelector(".game-message");
 					messageContainer.classList.add("game-over");
 					messageContainer.getElementsByTagName("p")[0].textContent ="Out of moves";
@@ -446,8 +455,15 @@ function mouseDownListener(evt) {
 		 if(Diag2Full && Diag1Full)  //bonus score for 2 diagonals
 			 diag_score+=15;
 	 
+         if(Diag2Full && Diag1Full)
+			 TwoDiagonalsFilledSound.play();
+		 else if(Diag2Full || Diag1Full)
+			 DiagonalFilledSound.play();
+		 
+		 var DiagonalFilled=false;
 		 if(Diag2Full || Diag1Full)  //redraw
 		 {
+                         DiagonalFilled=true;
 		//	 setTimeout(function(){draw();}, 1200);
 		    setTimeout(draw, 800);  //stay with red diagonals
 			setTimeout(function(){MovingScore("+"+diag_score, Stars[targeti][targetj].ct_x, Stars[targeti][targetj].ct_y,0);}, 800);
@@ -460,14 +476,11 @@ function mouseDownListener(evt) {
 	     {
 	        best=score;
 	        document.getElementById('best-container').innerHTML= best;
+			window.localStorage.setItem(Cookie, best);
 		 }
 		
+               return DiagonalFilled;
 	}
-	
-	function Close(){
-	
-	window.localStorage.setItem(Cookie, best );	
-}
 
 function MovingScore(txt, x, y, moves )
 {
@@ -483,6 +496,19 @@ function MovingScore(txt, x, y, moves )
    ctx.fillText(txt,x,y-moves*2);
    setTimeout( function(){MovingScore(txt, x, y, moves)}, 20);
 }	
+
+function ActivateSounds()
+{
+      StarFilledSound.play();
+	  StarFilledSound.stop();
+	  TwoDiagonalsFilledSound.play();
+	  TwoDiagonalsFilledSound.stop();
+	  EndOfGameSound.play();
+	  EndOfGameSound.stop();  
+	  DiagonalFilledSound.play(); 
+	  DiagonalFilledSound.stop(); 
+}
+
 /*function ShareScore()
    {
 	var tweet = document.getElementById("share-twitter");
@@ -503,4 +529,36 @@ function RemoveMessage()
 	  messageContainer.classList.remove("game-over");
       messageContainer.classList.remove("game-continue");  
 		
+}
+
+	function ToggleSound()
+	{
+		PlaySounds=!PlaySounds;
+		if(PlaySounds)
+		{
+			ActivateSounds();
+			document.getElementById("sound-button").src="res/sound_mute.png";
+		}
+		else
+			document.getElementById("sound-button").src="res/sound.png";
+	}
+function sound(src)
+{
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+		if(PlaySounds)
+		{
+		  this.sound.pause();
+          this.sound.currentTime = 0;
+          this.sound.play();
+		}
+    }
+    this.stop = function(){
+        this.sound.pause();
+    }
 }
