@@ -24,7 +24,8 @@
 	  var EndOfGameSound = new sound("sounds/correct-answer-bell-gliss-01.mp3");
 	  var DiagonalFilledSound = new sound("sounds/correct-answer-notification-01.mp3");	  
       
-	  var PlaySounds=false;
+	  var PlaySounds=true;
+	  var Start=false;
       
 	  var cells=7;   //cells x cells in game table
 
@@ -53,7 +54,7 @@ function shape(ct_x, ct_y,type)
  	 function StartGame(){
 		
 	  RemoveMessage();
-	  
+	  Start=true;
       for (var i=0; i<cells; i++)
 	  {
 		  var ct_y=(i+0.5)*canvas.width/cells;
@@ -162,6 +163,10 @@ function mouseDownListener(evt) {
 		evt.preventDefault();
 		if(timer)
 			return;
+		if(Start){		
+			Start=false;		
+			ActivateSounds();	
+		}
 
 		//getting mouse position correctly, being mindful of resizing that may have occured in the browser:
 		var bRect = canvas.getBoundingClientRect();
@@ -531,17 +536,18 @@ function RemoveMessage()
 		
 }
 
-	function ToggleSound()
+function ToggleSound()
+{
+	PlaySounds=!PlaySounds;
+	if(PlaySounds)
 	{
-		PlaySounds=!PlaySounds;
-		if(PlaySounds)
-		{
-			ActivateSounds();
-			document.getElementById("sound-button").src="res/sound_mute.png";
-		}
-		else
-			document.getElementById("sound-button").src="res/sound.png";
+		ActivateSounds();
+		document.getElementById("sound-button").src="res/sound_mute.png";
 	}
+	else
+		document.getElementById("sound-button").src="res/sound.png";
+}
+
 function sound(src)
 {
     this.sound = document.createElement("audio");
